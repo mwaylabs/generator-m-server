@@ -2,13 +2,14 @@
 'use strict';
 
 var path = require('path');
+var os = require('os');
 var assert = require('yeoman-generator').assert;
 var helpers = require('yeoman-generator').test;
 
 describe('mcap-project:app', function () {
   beforeEach(function (done) {
     helpers.run(path.join(__dirname, '../app'))
-      .inDir(path.resolve(__dirname, './temp'))
+      .inDir(path.join(os.tmpdir(), './tmp')) // create new dir
       .withOptions({ 'skip-install': true })
       .on('end', done);
   });

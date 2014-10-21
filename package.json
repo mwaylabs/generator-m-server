@@ -24,6 +24,7 @@
     "yeoman-generator"
   ],
   "dependencies": {
+    "chalk": "^0.5.1",
     "node-uuid": "^1.4.1",
     "yeoman-generator": "^0.17.0"
   },
