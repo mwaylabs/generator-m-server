@@ -7,6 +7,27 @@ module.exports = yeoman.generators.Base.extend({
     this.pkg = require('../package.json');
   },
 
+  prompting: function () {
+
+    // tell yeoman we're doing asynchronous stuff here
+    // so it can wait with subsequent tasks
+    var done = this.async();
+
+    var prompts = [
+      {
+        type: 'input',
+        name: 'name',
+        message: 'Name'
+      }
+    ];
+
+    this.prompt(prompts, function (answers) {
+      this.name = answers.name;
+
+      done();
+    }.bind(this));
+  },
+
   writing: {
     app: function () {
       this.template('_package.json', 'package.json');

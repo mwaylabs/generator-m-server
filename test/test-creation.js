@@ -1,20 +1,23 @@
 /*global describe, beforeEach, it*/
 'use strict';
 
-var path = require('path');
-var os = require('os');
 var assert = require('yeoman-generator').assert;
-var helpers = require('yeoman-generator').test;
+var helper = require('./helper');
 
-describe('mcap-project:app', function () {
+describe('m-server:app', function () {
   beforeEach(function (done) {
-    helpers.run(path.join(__dirname, '../app'))
-      .inDir(path.join(os.tmpdir(), './tmp')) // create new dir
-      .withOptions({ 'skip-install': true })
-      .on('end', done);
+
+    var answers = {
+      name: 'Hello'
+    };
+
+    // Creates a generateor with the default options / arguments
+    helper.createAppGenerator({
+      answers: answers
+    }, done);
   });
 
-  it('creates files', function () {
+  it('creates expected files', function () {
 
     var expectedFiles = [
       'package.json',
@@ -25,4 +28,14 @@ describe('mcap-project:app', function () {
 
     assert.file(expectedFiles);
   });
+
+  it('anchors are visible', function () {
+    var expectedContent = [
+      ['app.js', helper.regExpFromString('//build::require')],
+      ['app.js', helper.regExpFromString('//build::middleware')]
+    ];
+
+    assert.fileContent(expectedContent);
+  });
+
 });
