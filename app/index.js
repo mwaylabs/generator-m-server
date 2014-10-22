@@ -9,6 +9,11 @@ module.exports = yeoman.generators.Base.extend({
 
   prompting: function () {
 
+    if (this.options['name']) {
+      this.name = this.options['name'];
+      return;
+    }
+
     // tell yeoman we're doing asynchronous stuff here
     // so it can wait with subsequent tasks
     var done = this.async();

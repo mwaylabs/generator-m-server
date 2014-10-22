@@ -8,7 +8,7 @@ describe('m-server:app', function () {
   beforeEach(function (done) {
 
     var answers = {
-      name: 'Hello'
+      name: 'MyApp'
     };
 
     // Creates a generateor with the default options / arguments
@@ -25,8 +25,31 @@ describe('m-server:app', function () {
       'routes/index.js',
       'routes/overview.js'
     ];
+    var expectedContent = [
+      ['package.json', helper.regExpFromString('"name": "MyApp"')]
+    ];
 
     assert.file(expectedFiles);
+    assert.fileContent(expectedContent);
+  });
+
+  it('creates app with given name', function (done) {
+
+    var expectedContent = [
+      ['package.json', helper.regExpFromString('"name": "Hello"')]
+    ];
+
+    var options = {
+      name: 'Hello'
+    };
+
+    // Creates a generateor with the default options / arguments
+    helper.createAppGenerator({
+      options: options
+    }, function() {
+      assert.fileContent(expectedContent);
+      done();
+    });
   });
 
   it('anchors are visible', function () {
