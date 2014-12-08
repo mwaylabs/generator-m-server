@@ -1,9 +1,11 @@
 'use strict';
 
 var yeoman = require('yeoman-generator');
+var log = require('mcap-log');
 
 module.exports = yeoman.generators.Base.extend({
   initializing: function () {
+    log.debug('generator-m-server is started');
     this.pkg = require('../package.json');
   },
 
@@ -28,6 +30,7 @@ module.exports = yeoman.generators.Base.extend({
 
     this.prompt(prompts, function (answers) {
       this.name = answers.name;
+      log.debug('Name: %s', this.name);
 
       done();
     }.bind(this));
@@ -46,6 +49,7 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   end: function() {
+    log.debug('generator-m-server is completed');
     this.installDependencies({
       skipInstall: this.options['skip-install']
     });
