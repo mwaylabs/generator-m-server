@@ -52,7 +52,7 @@ Generator.prototype.addRequireToApp = function (script) {
       file: fullPath,
       needle: '//build::require',
       splicable: [
-        'var ' + this.name + ' = require(\'' + script.toLowerCase().replace(/\\/g, '/') + '.js\');'
+        'var ' + this.name + ' = require(\'./' + script.toLowerCase().replace(/\\/g, '/') + '.js\');'
       ]
     });
   } catch (e) {

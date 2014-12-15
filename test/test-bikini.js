@@ -33,7 +33,7 @@ describe('m-server:bikini', function () {
   it('middleware is set', function (done) {
     var expectedContent = [
       ['app.js', helper.regExpFromString('app.use(\'/foobar\', fooBar')],
-      ['app.js', helper.regExpFromString('var fooBar = require(\'routes/foobar.js\')')],
+      ['app.js', helper.regExpFromString('var fooBar = require(\'./routes/foobar.js\')')],
     ];
 
     helper.createSubGenerator('bikini', {args: ['fooBar']}, function() {
