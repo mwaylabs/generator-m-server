@@ -33,9 +33,29 @@ describe('m-server:bikini', function () {
   it('middleware is set', function (done) {
     var expectedContent = [
       ['app.js', helper.regExpFromString('app.use(\'/foobar\', fooBar')],
-      ['app.js', helper.regExpFromString('var fooBar = require(\'./routes/foobar.js\')')],
+      ['app.js', helper.regExpFromString('var fooBar = require(\'./routes/foobar.js\')')]
     ];
 
+    helper.createSubGenerator('bikini', {args: ['fooBar']}, function() {
+      assert.fileContent(expectedContent);
+      done();
+    });
+  });
+
+  it('middleware is set with primary key', function (done) {
+    var expectedContent = [
+      ['routes/foobar.js', helper.regExpFromString('idAttribute: \'_uuid\'')]
+    ];
+    helper.createSubGenerator('bikini', {args: ['fooBar', '_uuid']}, function() {
+      assert.fileContent(expectedContent);
+      done();
+    });
+  });
+
+  it('middleware is set with default primary key', function (done) {
+    var expectedContent = [
+      ['routes/foobar.js', helper.regExpFromString('idAttribute: \'_id\'')]
+    ];
     helper.createSubGenerator('bikini', {args: ['fooBar']}, function() {
       assert.fileContent(expectedContent);
       done();

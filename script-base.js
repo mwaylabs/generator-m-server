@@ -4,10 +4,21 @@ var path = require('path');
 var yeoman = require('yeoman-generator');
 var utils = require('./util.js');
 var chalk = require('chalk');
+var _ = require('lodash');
+/**
+ * set the model the assigned primarykey
+ * @param arguments
+ * @returns {*}
+ */
+var _setPrimaryKey = function (primaryKey) {
+  if(!_.isUndefined(primaryKey)){
+    return primaryKey;
+  }
+  return '_id';
+};
 
 var Generator = module.exports = function Generator() {
   yeoman.generators.NamedBase.apply(this, arguments);
-
   try {
     this.appname = require(path.join(process.cwd(), 'package.json')).name;
   } catch (e) {
@@ -18,6 +29,17 @@ var Generator = module.exports = function Generator() {
 
   this.cameledName = this._.camelize(this.name);
   this.classedName = this._.classify(this.name);
+  /**
+   * @dexcription use command "yo m-server:bikini <name> <primaryKey>"
+   * @property primaryKey
+   * @type {*}
+   * @example ````
+   * this.args: Array[2]
+     0: "Blubb"
+     1: "_uuid"
+   ```
+   */
+  this.primaryKey = _setPrimaryKey(this.args[1]);
 
   if (typeof this.env.options.appPath === 'undefined') {
     this.env.options.appPath = this.options.appPath;

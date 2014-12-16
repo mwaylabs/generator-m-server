@@ -11,7 +11,7 @@ app.use('/', bikini.middleware({
     container: '<%= appname %> MetaModelContainer',
     model: '<%= name %>'
   },
-  idAttribute: '_id'
+  idAttribute: '<%= primaryKey %>'
 }));
 
 module.exports = app;
