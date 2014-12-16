@@ -8,35 +8,28 @@ var chalk = require('chalk');
 var Generator = module.exports = function Generator() {
   yeoman.generators.NamedBase.apply(this, arguments);
 
+  // Get the app name form package.json or cwd folder name
   try {
     this.appname = require(path.join(process.cwd(), 'package.json')).name;
   } catch (e) {
     this.appname = path.basename(process.cwd());
   }
   this.appname = this._.slugify(this._.humanize(this.appname));
-  this.scriptAppName = this._.camelize(this.appname);
 
-  this.cameledName = this._.camelize(this.name);
-  this.classedName = this._.classify(this.name);
-
+  // Get root path to the app
   if (typeof this.env.options.appPath === 'undefined') {
-    this.env.options.appPath = this.options.appPath;
-
-    if (!this.env.options.appPath) {
-      try {
-        this.env.options.appPath = require(path.join(process.cwd(), 'package.json')).appPath;
-      } catch (e) {}
-    }
-    this.env.options.appPath = ''; //this.env.options.appPath || 'app';
+    this.env.options.appPath = this.env.options.appPath || '';
     this.options.appPath = this.env.options.appPath;
   }
 
+  // Define the template location
   var sourceRoot = '/templates/';
   this.sourceRoot(path.join(__dirname, sourceRoot));
 };
 
 util.inherits(Generator, yeoman.generators.NamedBase);
 
+// Copy template
 Generator.prototype.appTemplate = function (src, dest) {
   yeoman.generators.Base.prototype.template.apply(this, [
     src + '.js',
@@ -44,13 +37,19 @@ Generator.prototype.appTemplate = function (src, dest) {
   ]);
 };
 
+
+// Add requirete statement to the app.js
 Generator.prototype.addRequireToApp = function (script) {
   try {
     var appPath = this.env.options.appPath;
     var fullPath = path.join(appPath, 'app.js');
     utils.rewriteFile({
       file: fullPath,
+
+      // Anchor
       needle: '//build::require',
+
+      // Content to insert
       splicable: [
         'var ' + this.name + ' = require(\'./' + script.toLowerCase().replace(/\\/g, '/') + '.js\');'
       ]
@@ -68,7 +67,11 @@ Generator.prototype.addMiddlewareToApp = function (script) {
     var fullPath = path.join(appPath, 'app.js');
     utils.rewriteFile({
       file: fullPath,
+
+      // Anchor
       needle: '//build::middleware',
+
+      // Content to insert
       splicable: [
         'app.use(\'/' + this.name.toLowerCase() + '\', ' + this.name + ');'
       ]
@@ -82,8 +85,11 @@ Generator.prototype.addMiddlewareToApp = function (script) {
 
 Generator.prototype.generateSourceAndTest = function (appTemplate, targetDirectory, skipAdd) {
 
+  // Copy template to the users app
   this.appTemplate(appTemplate, path.join(targetDirectory, this.name));
+
   if (!skipAdd) {
+    // Inject express code
     this.addRequireToApp(path.join(targetDirectory, this.name));
     this.addMiddlewareToApp(path.join(targetDirectory, this.name));
   }
